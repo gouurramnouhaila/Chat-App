@@ -5,8 +5,6 @@ use App\src\controllers\LoginController;
 use App\src\controllers\MessageController;
 use App\src\controllers\ForgotController;
 use App\src\core\Application;
-use App\src\core\Router;
-use App\src\core\Request;
 
 require_once __DIR__ . './../vendor/autoload.php';
 
