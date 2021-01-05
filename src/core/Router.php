@@ -17,6 +17,8 @@ class Router {
      */
     public  $routes = [];
 
+    public $repos = ['App\src\controllers\LoginController','App\src\controllers\MessageController','App\src\controllers\HomeController'];
+
      /**
      * @var Request
      */
@@ -74,18 +76,18 @@ class Router {
         }
 
         if(is_array($callBack)) {
-          if($callBack[0] === "App\src\controllers\LoginController") {
-              Application::$app->controller = new $callBack[0]($this->userRepository);
-              $callBack[0] = Application::$app->controller;
-          }
-          else if($callBack[0] === "App\src\controllers\MessageController") {
-              Application::$app->controller = new $callBack[0]($this->messageRepository);
-              $callBack[0] = Application::$app->controller;
-          }
-          else if($callBack[0] === "App\src\controllers\HomeController") {
-              Application::$app->controller = new $callBack[0]();
-              $callBack[0] = Application::$app->controller;
-          }
+            if($callBack[0] === "App\src\controllers\LoginController") {
+                Application::$app->controller = new $callBack[0]($this->userRepository);
+                $callBack[0] = Application::$app->controller;
+            }
+            else if($callBack[0] === "App\src\controllers\MessageController") {
+                Application::$app->controller = new $callBack[0]($this->messageRepository);
+                $callBack[0] = Application::$app->controller;
+            }
+            else if($callBack[0] === "App\src\controllers\HomeController") {
+                Application::$app->controller = new $callBack[0]();
+                $callBack[0] = Application::$app->controller;
+            }
         }
 
         return call_user_func($callBack,$this->request);
