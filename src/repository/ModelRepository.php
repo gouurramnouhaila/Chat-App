@@ -3,9 +3,12 @@
 
 namespace App\src\repository;
 
-
 use App\src\core\Application;
 
+/**
+ * Class ModelRepository
+ * @package App\src\repository
+ */
 abstract class ModelRepository
 {
     /**
