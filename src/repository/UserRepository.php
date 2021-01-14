@@ -5,7 +5,7 @@ namespace App\src\repository;
 
 use App\src\repository\ModelRepository;
 
-class UserRepository extends ModelRepository
+class UserRepository extends IUser
 {
 
     /**
