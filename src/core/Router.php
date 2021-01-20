@@ -2,8 +2,6 @@
 
 namespace App\src\core;
 
-use App\src\controllers\Controller;
-use App\src\controllers\LoginController;
 use App\src\core\Request;
 use App\src\core\Response;
 use App\src\repository\MessageRepository;
@@ -44,6 +42,14 @@ class Router {
      */
     public $messageRepository;
 
+    /**
+     * Router constructor.
+     * @param Request $request
+     * @param Response $response
+     * @param Templating $template
+     * @param UserRepository $userRepository
+     * @param MessageRepository $messageRepository
+     */
     public function __construct(Request $request,Response $response,Templating $template,UserRepository $userRepository,MessageRepository $messageRepository) {
         $this->request = $request;
         $this->response = $response;
@@ -52,15 +58,26 @@ class Router {
         $this->messageRepository = $messageRepository;
     }
 
+    /**
+     * @param $path
+     * @param $callBack
+     */
     public function get($path, $callBack)
     {
         $this->routes['get'][$path] = $callBack;
     }
 
+    /**
+     * @param $path
+     * @param $callBack
+     */
     public function post($path,$callBack) {
         $this->routes['post'][$path] = $callBack;
     }
 
+    /**
+     * @return mixed|void
+     */
     public function resolve() {
         $path = $this->request->getPath();
         $method = $this->request->Method();
@@ -76,22 +93,11 @@ class Router {
         }
 
         if(is_array($callBack)) {
-            if($callBack[0] === "App\src\controllers\LoginController") {
-                Application::$app->controller = new $callBack[0]($this->userRepository);
-                $callBack[0] = Application::$app->controller;
-            }
-            else if($callBack[0] === "App\src\controllers\MessageController") {
-                Application::$app->controller = new $callBack[0]($this->messageRepository);
-                $callBack[0] = Application::$app->controller;
-            }
-            else if($callBack[0] === "App\src\controllers\HomeController") {
                 Application::$app->controller = new $callBack[0]();
                 $callBack[0] = Application::$app->controller;
-            }
         }
 
         return call_user_func($callBack,$this->request);
-
     }
 
 

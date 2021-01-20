@@ -3,7 +3,9 @@
 namespace App\src\controllers;
 
 use App\src\core\Request;
+use App\src\Factory\UserFactory;
 use App\src\repository\UserRepository;
+
 
 /**
  * Class LoginController
@@ -16,25 +18,22 @@ class LoginController extends Controller {
      */
     private $userRepository;
 
-    /**
-     * @param UserRepository $userRepository
-     */
-    public function __construct(UserRepository $userRepository)
-    {
-        $this->userRepository = $userRepository;
-    }
+
+
 
     /**
      * @param Request $request
      */
     public function signIn(Request $request) {
+        $userRepository = $this->getRepository();
+
         if($this->loadDataFromPost($request)) {
 
             // if login function equal true then user connect
-            if($this->userRepository->login($_POST['email'],$_POST['password'])) {
+            if($userRepository->login($_POST['email'],$_POST['password'])) {
                 session_start();
                 // user connect information
-                $user = $this->userRepository->findOne($_POST['email']);
+                $user = $userRepository->findOne($_POST['email']);
                 // Session equal user id connect
                 $_SESSION["id_user"] = $user->id;
 
@@ -51,12 +50,13 @@ class LoginController extends Controller {
      * @param Request $request
      */
     public function signUp(Request $request) {
+        $userRepository = $this->getRepository();
         if($this->loadDataFromPost($request)) {
 
            // the error message coming from the function validate
-           $displayError = $this->userRepository->validate($_POST['confirmPassword'],$_POST['password']);
+           $displayError = $userRepository->validate($_POST['confirmPassword'],$_POST['password']);
 
-           if($displayError === "" && $this->userRepository->submitted()) {
+           if($displayError === "" && $userRepository->submitted()) {
                 return $this->render('sign_in',[]);
            }
            else {
@@ -74,11 +74,21 @@ class LoginController extends Controller {
      * function for charge data coming from the post method
      */
     public function loadDataFromPost(Request $request): bool {
+        $userRepository = $this->getRepository();
         if($request->isPost()) {
-            $this->userRepository->loadData($request->getBody());
+            $userRepository->loadData($request->getBody());
             return true;
         }
         return false;
+    }
+
+    /**
+     * @return UserRepository
+     * Create Object from UserRepository
+     */
+    public function getRepository() {
+        $repository =  new UserFactory();
+        return $repository->doFactory();
     }
 
 
